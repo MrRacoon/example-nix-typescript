@@ -9,22 +9,38 @@
   outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
+        name = "example-nix-typescript";
+
         pkgs = nixpkgs.legacyPackages.${system};
-        deps = [
-          pkgs.typescript
-          pkgs.yarn
-          pkgs.nodejs
-        ];
 
         node-modules = pkgs.mkYarnPackage {
           name = "node-modules";
           src = ./.;
         };
 
-        example-nix-typescript = pkgs.stdenv.mkDerivation rec {
-          name = "example-nix-typescript";
+        deps = [
+          pkgs.typescript
+          pkgs.yarn
+          pkgs.nodejs
+          node-modules
+        ];
+
+        yarnRun = cmd: pkgs.stdenv.mkDerivation {
+          name = "yarn-run-${cmd}";
           src = ./.;
-          buildInputs = deps ++ [ node-modules ];
+          doCheck = true;
+          nativeBuildInputs = deps;
+          checkPhase = ''
+            ln -s ${node-modules}/libexec/${name}/node_modules node_modules
+            ${pkgs.yarn}/bin/yarn run ${cmd}
+          '';
+          installPhase = "touch $out";
+        };
+
+        example-nix-typescript = pkgs.stdenv.mkDerivation {
+          inherit name;
+          src = ./.;
+          buildInputs = deps;
           buildPhase = ''
             ln -s ${node-modules}/libexec/${name}/node_modules node_modules
             ${pkgs.yarn}/bin/yarn build
@@ -38,12 +54,15 @@
         };
       in
       {
+        checks = {
+          jest = yarnRun "test";
+        };
         packages = {
           node-modules = node-modules;
           default = example-nix-typescript;
         };
-        devShell = with pkgs; mkShell {
-          buildInputs = deps ++ [ node-modules ];
+        devShell = pkgs.mkShell {
+          buildInputs = deps;
         };
       }
     );
