@@ -56,6 +56,8 @@
       {
         checks = {
           jest = yarnRun "test";
+          lint = yarnRun "lint";
+          pretty = yarnRun "pretty --check";
         };
         packages = {
           node-modules = node-modules;
