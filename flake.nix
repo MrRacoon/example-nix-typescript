@@ -47,9 +47,11 @@
           '';
           installPhase = ''
             mkdir $out
-            mv dist $out/dist
-            mv bin $out/bin
-            mv node_modules $out/node_modules
+            mv package.json $out/
+            mv dist $out/
+            mv bin $out/
+            mv node_modules $out/
+
           '';
         };
       in

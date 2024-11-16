@@ -1,5 +1,4 @@
-import * as R from 'ramda'
-import { incrementAll } from './module'
+import { incrementAll } from './module.js'
 
 console.log('It works!')
 console.log("Look! Here's data too!")

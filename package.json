@@ -3,6 +3,7 @@
   "description": "Example of building typescript apps with nix",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "jest",
     "lint": "eslint -c eslint.config.mjs src",
