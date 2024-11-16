@@ -1,7 +1,9 @@
 import * as R from 'ramda'
+import { incrementAll } from './module'
 
-console.log('erik')
+console.log('It works!')
+console.log("Look! Here's data too!")
 
-const ans = R.map((x: number) => x + 1, [1, 2, 3])
+const ans = incrementAll([19, 23, 42])
 
 console.log(ans)
