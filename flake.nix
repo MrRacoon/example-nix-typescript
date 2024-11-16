@@ -51,7 +51,6 @@
             mv dist $out/
             mv bin $out/
             mv node_modules $out/
-
           '';
         };
       in
